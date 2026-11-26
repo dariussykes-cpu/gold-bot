@@ -1,0 +1,64 @@
+# Gold paper bot: runs every weekday on GitHub's servers, so the laptop can be off.
+# PAPER TRADING ONLY. The bot is hard-coded to https://paper-api.alpaca.markets.
+#
+# Start time: 10:45 UTC = 06:45 AST all year
+#   = 05:45 ET in winter / 06:45 ET in summer, before the 07:00 ET London window.
+# The bot exits itself on market holidays and finishes by about 11:00 ET.
+# After each run it saves journal.csv, state.json and logs/ back into this repository.
+
+name: Gold paper bot
+
+on:
+  schedule:
+    - cron: "45 10 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "check = test the connection only, run = today's full routine"
+        required: true
+        default: check
+        type: choice
+        options: [check, run]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gold-bot
+  cancel-in-progress: false
+
+jobs:
+  trade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run the bot
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.mode }}" = "check" ]; then
+            python gold_bot.py --check
+          else
+            python gold_bot.py
+          fi
+
+      - name: Save journal, state and logs
+        if: always()
+        run: |
+          git config user.name "gold-bot"
+          git config user.email "gold-bot@users.noreply.github.com"
+          git add -A journal.csv state.json logs || true
+          if git diff --cached --quiet; then
+            echo "Nothing new to save."
+          else
+            git commit -m "Bot run $(date -u +%Y-%m-%d)"
+            git pull --rebase
+            git push
+          fi
