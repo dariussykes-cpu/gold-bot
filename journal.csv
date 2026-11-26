@@ -1,0 +1,7 @@
+date,window,score,signals,side,qty,entry,exit,outcome,pnl,equity_after,progress_x
+2026-11-19,LONDON 07:00-09:15,-2,"{""asia"": -1, ""early_london"": -1, ""gap"": 0}",sell,602,,,no trade: entry not filled,,,
+2026-11-19,NY 09:30-11:00,-3,"{""asia"": -1, ""london"": -1, ""gap"": -1, ""vs_vwap"": -1, ""last30"": 1}",sell,,339.9,336.42,watch only: would have made +1.02% before leverage,,,
+2026-11-23,LONDON 07:00-09:15,3,"{""asia"": 1, ""early_london"": 1, ""gap"": 1}",buy,619,331.655767,335.929677,time exit,2645.55,105504.71,1.0257
+2026-11-23,NY 09:30-11:00,5,"{""asia"": 1, ""london"": 1, ""gap"": 1, ""vs_vwap"": 1, ""last30"": 1}",buy,,337.71,336.395,watch only: would have made -0.39% before leverage,,,
+2026-11-24,LONDON 07:00-09:15,0,"{""asia"": -1, ""early_london"": 1, ""gap"": 0}",,,,,no trade: signals split,,,
+2026-11-25,NY 09:30-11:00,-5,"{""asia"": -1, ""london"": -1, ""gap"": -1, ""vs_vwap"": -1, ""last30"": -1}",sell,,317.15,315.67,watch only: would have made +0.47% before leverage,,,
